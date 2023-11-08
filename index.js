@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require("./config/connectDB");
 const userRoutes = require("./routes/userRoutes");
+const codeRoutes = require("./routes/codeRoutes");
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 4040;
 connectDB();
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/codes", codeRoutes);
 
 app.get("/", (req,res) => {
     res.send("Welcome to codesynth backend!!");

@@ -3,7 +3,7 @@ const Code = require('../models/codeModel');
 const getSingleCode = async(req, res) => {
     try {
         const codeId = req.params.id;
-        const codeDoc = await Code.findById(codeId);
+        const codeDoc = await Code.findById(codeId).populate('owner');
 
         if(!codeDoc) {
             res.status(404).json({
@@ -45,7 +45,9 @@ const getAllCode = async(req, res) => {
 const getAllUserCodes = async(req, res) => {
     try {
         const userId = req.user;
-        const codeDocs = await Code.find({ owner: { $ne: userId } }).populate('owner');
+        const codeDocs = await Code.find({
+            $and: [{ owner: { $ne: userId }, status: 'public' }]
+        }).populate('owner');
 
         res.status(200).json({
             message : 'Codes found successfully',

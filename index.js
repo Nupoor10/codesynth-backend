@@ -5,6 +5,7 @@ const connectDB = require("./config/connectDB");
 const userRoutes = require("./routes/userRoutes");
 const codeRoutes = require("./routes/codeRoutes");
 const cohereRoutes = require("./routes/cohereRoutes");
+const noteRoutes = require("./routes/noteRoutes");
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ connectDB();
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/codes", codeRoutes);
 app.use("/api/v1/llm", cohereRoutes);
+app.use("/api/v1/notes", noteRoutes);
 
 app.get("/", (req,res) => {
     res.send("Welcome to codesynth backend!!");

@@ -9,7 +9,6 @@ const cohereRoutes = require("./routes/cohereRoutes");
 const noteRoutes = require("./routes/noteRoutes");
 const roomRoutes = require('./routes/roomRoutes');
 const initSocket = require('./socket');
-const ACTIONS = require('./constants/Actions');
 
 dotenv.config();
 const app = express();

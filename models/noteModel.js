@@ -4,6 +4,7 @@ const Code = require('./codeModel');
 const noteSchema = new mongoose.Schema({
     title : {
         type: String,
+        required: [true, "Please provide a note title"]
     },
     content : {
         type : String,
@@ -14,7 +15,7 @@ const noteSchema = new mongoose.Schema({
     code : {
         type : mongoose.Types.ObjectId,
         ref : Code,
-        required : true
+        required : [true, "Please provide a Code ID"]
     }
 }, {timestamps: true})
 

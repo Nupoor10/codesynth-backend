@@ -6,18 +6,18 @@ const getSingleCode = async(req, res) => {
         const codeDoc = await Code.findById(codeId).populate('owner');
 
         if(!codeDoc) {
-            res.status(404).json({
+            return res.status(404).json({
                 message : 'Code not found'
             })
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message : 'Code found successfully',
             codeDoc
         })
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Code fetching failed',
             error: error.message,
         });
@@ -27,15 +27,15 @@ const getSingleCode = async(req, res) => {
 const getAllCode = async(req, res) => {
     try {
         const userId = req.user;
-        const codeDocs = await Code.find({owner : userId}).populate('owner');
+        const codeDocs = await Code.find({ $and: [ {owner : userId}, {isRoom : !true}]}).populate('owner');
 
-        res.status(200).json({
+        return res.status(200).json({
             message : 'Code found successfully',
             codeDocs
         })
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Code fetching failed',
             error: error.message,
         });
@@ -46,16 +46,16 @@ const getAllUserCodes = async(req, res) => {
     try {
         const userId = req.user;
         const codeDocs = await Code.find({
-            $and: [{ owner: { $ne: userId }, status: 'public' }]
+            $and: [{ owner: { $ne: userId }, isRoom: false }]
         }).populate('owner');
 
-        res.status(200).json({
+        return res.status(200).json({
             message : 'Codes found successfully',
             codeDocs
         })
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Codes fetching failed',
             error: error.message,
         });
@@ -65,25 +65,25 @@ const getAllUserCodes = async(req, res) => {
 const createCode = async(req, res) => {
     try {
         const userId = req.user;
-        const { html, css, javascript, status, title } = req.body;
+        const { html, css, javascript, isRoom, title } = req.body;
 
-        const newCode = await new Code({
+        const newCode = new Code({
             title,
             html,
             css,
             javascript,
-            status,
+            isRoom,
             owner: userId,
         });
-        await newCode.save();
+        const codeDoc = await newCode.save();
 
-        res.status(201).json({
+        return res.status(201).json({
             message : 'New Code Created successfully',
-            newCode
+            codeDoc
         })
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Code creation failed',
             error: error.message,
         });
@@ -102,18 +102,18 @@ const updateCode = async(req, res) => {
         );
 
         if (!updatedCode) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Code not found',
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Code updated successfully',
             updatedCode,
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Code update failed',
             error: error.message,
         });
@@ -128,19 +128,19 @@ const deleteCode = async(req, res) => {
         const codeDoc = await Code.findOne({ _id: codeId, owner: userId });
 
         if (!codeDoc) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Code not found',
             });
         }
 
         await Code.deleteOne({ _id: codeDoc._id });
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Code deleted successfully',
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Code deletion failed',
             error: error.message,
         });

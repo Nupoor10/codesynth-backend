@@ -5,16 +5,16 @@ const secret = process.env.TOKEN_SECRET;
 
 const authMiddleware = (req, res, next) => {
     try {
-        const token = req.header('Authorization');
+        const token = req.header('Authorization'); 
         if (!token) {
-            res.status(401).json({
+            return res.status(401).json({
                 message: "Unauthorized - Missing Token"
             });
         }
 
         const decodedToken = jwt.verify(token, secret);
         if (!decodedToken || !decodedToken.data) {
-            res.status(401).json({
+            return res.status(401).json({
                 message: 'Unauthorized - Invalid token'
             });
         }
@@ -23,7 +23,7 @@ const authMiddleware = (req, res, next) => {
         next();
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "Error in authorization",
             error: error.message
         });

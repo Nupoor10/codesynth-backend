@@ -7,18 +7,18 @@ const getSingleNote = async(req, res) => {
 
         const note = await Note.findById(noteId);
         if(!note) {
-            res.status(404).json({
+            return res.status(404).json({
                 message : 'Note not found'
             })
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message : 'Note found successfully',
             note
         })
     } catch(error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message : 'Note fetching failed',
             error : error.message
         })
@@ -31,13 +31,13 @@ const getAllNotes = async(req, res) => {
 
         const notes = await Note.find({code : codeId});
         
-        res.status(200).json({
+        return res.status(200).json({
             message : 'Notes found successfully',
             notes
         })
     } catch(error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message : 'Note fetching failed',
             error : error.message
         })
@@ -50,7 +50,7 @@ const createNote = async(req, res) => {
 
         const existingCode = await Code.findById(codeId);
         if (!existingCode) {
-            res.status(404).json({
+            return res.status(404).json({
                 message : 'Code not found',
             })
         }
@@ -59,14 +59,14 @@ const createNote = async(req, res) => {
         const newNote = new Note({title, content, images, code: codeId});
         await newNote.save();
 
-        res.status(201).json({
+        return res.status(201).json({
             message : 'Note created successfully',
             newNote
         })
 
     } catch(error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message : 'Note creation failed',
             error : error.message
         })
@@ -85,18 +85,18 @@ const updateNote = async(req, res) => {
         );
 
         if (!updatedNote) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Note not found',
             });
         }
     
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Note updated successfully',
             updatedNote,
         });
     } catch(error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message : 'Note updation failed',
             error : error.message
         })
@@ -110,19 +110,19 @@ const deleteNote = async(req, res) => {
         const noteDoc = await Note.findById(noteId);
         if (!noteDoc) {
         
-        res.status(404).json({
+        return res.status(404).json({
             message: 'Note not found',
         });
         }
 
         await Note.deleteOne({ _id: noteDoc._id });
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Note deleted successfully',
         });
     } catch(error) {
         console.error(error);
-        res.status(500).json({
+        return res.status(500).json({
             message : 'Note deletion failed',
             error : error.message
         })

@@ -20,7 +20,7 @@ const getCohereResponse = async(givenPrompt) => {
 
         return response?.body?.generations[0]?.text;
     } catch(error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
